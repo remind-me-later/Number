@@ -1,26 +1,12 @@
-PROGRAM = number
+CFLAGS += -ansi -Wall -Wextra -Werror -pedantic
+CFLAGS += -DNDEBUG -Ofast -s -flto
 
-SRC = $(wildcard *.c)
-OBJ = $(SRC:%.c=%.o)
+all: number
 
-CWARN = -ansi -Wall -Wextra -Werror -pedantic
-CFLAGS = -DNDEBUG -Ofast -s -flto
+number: number.c
+	$(CC) $(CFLAGS) -o $@ $<
 
-.PHONY: all 
-all: $(PROGRAM)
-
-.PHONY: debug
-debug: CFLAGS = $(CWARN) -DDEBUG -O0 -g3 -fsanitize=address \
-	-fsanitize=undefined
-debug: LDFLAGS += -fsanitize=address -fsanitize=undefined
-debug: clean all
-
-.PHONY: clean
 clean:
-	$(RM) $(OBJ)
+	$(RM) number
 
-$(PROGRAM): $(PROGRAM).o
-	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
-
-%.o: %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+.PHONY: all clean
